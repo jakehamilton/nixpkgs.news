@@ -1,0 +1,55 @@
+---
+import * as Icon from "@astropub/icons";
+import HeaderLink from "./HeaderLink.astro";
+import { SITE_TITLE } from "../consts";
+---
+
+<header>
+	<nav>
+		<h2>{Astro.url.pathname === "/" ? "" : <a href="/">{SITE_TITLE}</a>}</h2>
+		<div class="internal-links">
+			<HeaderLink href="/archive" alt="archive"><Icon.Archive size={20} fill="currentColor" /></HeaderLink>
+		</div>
+	</nav>
+</header>
+<style>
+	header {
+		margin: 0;
+		padding: 0 1rem;
+		position: absolute;
+		width: 100%;
+	}
+	h2 {
+		margin: 0;
+		font-size: 1em;
+	}
+
+	h2 a,
+	h2 a.active {
+		text-decoration: none;
+	}
+	nav {
+		display: flex;
+		align-items: center;
+	}
+	.internal-links {
+		display: flex;
+		flex-grow: 1;
+		justify-content: flex-end;
+	}
+	nav a {
+		padding: 1em 0.5em;
+		color: var(--black);
+		border-bottom: 4px solid transparent;
+		text-decoration: none;
+	}
+	.social-links,
+	.social-links a {
+		display: flex;
+	}
+	@media (max-width: 720px) {
+		.social-links {
+			display: none;
+		}
+	}
+</style>
