@@ -59,8 +59,11 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // A function that returns a date object for Sunday at 00:00 for the current week.
 const getWeekStart = () => {
-	// const date = new Date(Date.now() - 1_000 * 60 * 60 * 24 * 7);
-	const date = new Date(Date.now());
+	let date = new Date();
+
+	if (date.getDay() === 0) {
+		date = new Date(Date.now() - 1_000 * 60 * 60 * 24 * 7);
+	}
 
 	date.setDate(date.getDate() - date.getDay());
 
@@ -72,12 +75,12 @@ const WEEK_START = getWeekStart();
 const summarize = async ({ title = null, body }) => {
 	const response = await openai.chat.completions.create({
 		model: OPENAI_MODEL,
-		max_tokens: 650,
+		max_tokens: 1_000,
 		messages: [
 			title
 				? {
 					role: "user",
-					content: `Summarize the following post in a maximum of one paragraph.
+					content: `Summarize the following post in a maximum of one paragraph. Include all important information.
 
 This post is titled:
 
@@ -115,7 +118,7 @@ const recapAnnouncements = async (announcements) => {
 		messages: [
 			{
 				role: "user",
-				content: `Write the body of a news article for the Nix community about the following posts. Only talk about the posts mentioned and do NOT write an introduction or conclusion. This article is a weekly recap of the announcements and activity in the Nix community and on the NixPkgs package repository. All pull requests mentioned have been successfully merged. Ensure that the article is interesting to read and useful as if it were a newspaper for the Nix ecosystem. Do NOT output HTML. ONLY output Markdown text. You MUST include the link and name for each announcement post. Do NOT create markdown titles. Do NOT refer to any authors using pronouns, only use their username. Every announcement MUST be addressed.
+				content: `Write the body of a news article for the Nix community about the following posts. Only talk about the posts mentioned and do NOT write an introduction or conclusion. This article is a weekly recap of the announcements and activity in the Nix community and on the NixPkgs package repository. All pull requests mentioned have been successfully merged. Ensure that the article is interesting to read and useful as if it were a newspaper for the Nix ecosystem. Do NOT output HTML. ONLY output Markdown text. You MUST include the link and name for each announcement post. Do NOT create markdown titles. Do NOT refer to any authors using pronouns, only use their username. Every announcement MUST be addressed. You MUST include VALID links to announcements.
 
 # Announcements
 
@@ -156,7 +159,7 @@ const recapPulls = async (pulls) => {
 		messages: [
 			{
 				role: "user",
-				content: `Write the body of a news article for the Nix community about the following posts. Only talk about the posts mentioned and do NOT write an introduction or conclusion. This article is a weekly recap of the announcements and activity in the Nix community and on the NixPkgs package repository. All pull requests mentioned have been successfully merged. Ensure that the article is interesting to read and useful as if it were a newspaper for the Nix ecosystem. Do NOT output HTML. ONLY output Markdown text. Every pull request title MUST be a link to the pull request. Every user name MUST be a link to that user's GitHub profile. Your output is half of the article, focusing on only pull request activity. Do NOT create markdown titles. Do NOT refer to any authors using pronouns, only use their username.
+				content: `Write the body of a news article for the following posts about NixPkgs. Only talk about the posts mentioned and do NOT write an introduction or conclusion. This article is a weekly recap of the announcements and activity in the Nix community and on the NixPkgs package repository. All pull requests mentioned have been successfully merged. Ensure that the article is interesting to read and useful as if it were a newspaper for the Nix ecosystem. Do NOT output HTML. ONLY output Markdown text. Every pull request title MUST be a link to the pull request. Every user name MUST be a link to that user's GitHub profile. Your output is half of the article, focusing on only pull request activity. Do NOT create markdown titles. Do NOT refer to any authors using pronouns, only use their username. You MUST include VALID links to pull requests.
 
 # Pull Requests
 
@@ -341,7 +344,7 @@ const isPullUseful = async (pull) => {
 		messages: [
 			{
 				role: "user",
-				content: `Determine whether the following pull request is useful to the Nix commumity. A pull request is useful if it fixes a CRITICAL security vulnerability, provides a MAJOR version upgrade (from the semver version Major.Minor.Patch), removes a popular package, or creates (init) a new package. Respond only with "yes" if the pull request is useful, and "no" if it is not useful. Be strict, only important pull requests should be allowed.
+				content: `Determine whether the following pull request is useful to the Nix commumity. A pull request is useful if it fixes a CRITICAL security vulnerability, provides a MAJOR version upgrade (from the semver version Major.Minor.Patch), removes a popular package, or creates (init) a new package. Respond only with "yes" if the pull request is useful, and "no" if it is not useful. Only important pull requests that are for major upgrades, security fixes, popular packages, or new packages should be allowed.
 
 \`\`\`
 ${pull.title}
