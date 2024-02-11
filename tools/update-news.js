@@ -71,8 +71,8 @@ const WEEK_START = getWeekStart();
 
 const summarize = async ({ title = null, body }) => {
 	const response = await openai.chat.completions.create({
-		model: "gpt-3.5-turbo",
-		max_tokens: 600,
+		model: OPENAI_MODEL,
+		max_tokens: 650,
 		messages: [
 			title
 				? {
@@ -115,7 +115,7 @@ const recapAnnouncements = async (announcements) => {
 		messages: [
 			{
 				role: "user",
-				content: `Write the body of a news article for the Nix community about the following posts. Only talk about the posts mentioned. This article is a weekly recap of the announcements and activity in the Nix community and on the NixPkgs package repository. All pull requests mentioned have been successfully merged. Ensure that the article is interesting to read and useful as if it were a newspaper for the Nix ecosystem. Do NOT output HTML. ONLY output Markdown text. You MUST include the link and name for each announcement post. Do NOT create markdown titles. Do NOT refer to any authors using pronouns, only use their username. Every announcement MUST be addressed.
+				content: `Write the body of a news article for the Nix community about the following posts. Only talk about the posts mentioned and do NOT write an introduction or conclusion. This article is a weekly recap of the announcements and activity in the Nix community and on the NixPkgs package repository. All pull requests mentioned have been successfully merged. Ensure that the article is interesting to read and useful as if it were a newspaper for the Nix ecosystem. Do NOT output HTML. ONLY output Markdown text. You MUST include the link and name for each announcement post. Do NOT create markdown titles. Do NOT refer to any authors using pronouns, only use their username. Every announcement MUST be addressed.
 
 # Announcements
 
@@ -124,7 +124,7 @@ ${announcements
 							(announcement) =>
 								`<!-- Announcement -->
 Author:
-@${announcement.post.username}
+${announcement.post.username}
 
 Link:
 ${announcement.link}
@@ -156,7 +156,7 @@ const recapPulls = async (pulls) => {
 		messages: [
 			{
 				role: "user",
-				content: `Write the body of a news article for the Nix community about the following posts. Only talk about the posts mentioned. This article is a weekly recap of the announcements and activity in the Nix community and on the NixPkgs package repository. All pull requests mentioned have been successfully merged. Ensure that the article is interesting to read and useful as if it were a newspaper for the Nix ecosystem. Do NOT output HTML. ONLY output Markdown text. Every pull request title MUST be a link to the pull request. Every user name MUST be a link to that user's GitHub profile. Your output is half of the article, focusing on only pull request activity. Do NOT create markdown titles. Do NOT refer to any authors using pronouns, only use their username.
+				content: `Write the body of a news article for the Nix community about the following posts. Only talk about the posts mentioned and do NOT write an introduction or conclusion. This article is a weekly recap of the announcements and activity in the Nix community and on the NixPkgs package repository. All pull requests mentioned have been successfully merged. Ensure that the article is interesting to read and useful as if it were a newspaper for the Nix ecosystem. Do NOT output HTML. ONLY output Markdown text. Every pull request title MUST be a link to the pull request. Every user name MUST be a link to that user's GitHub profile. Your output is half of the article, focusing on only pull request activity. Do NOT create markdown titles. Do NOT refer to any authors using pronouns, only use their username.
 
 # Pull Requests
 
@@ -165,7 +165,7 @@ ${pulls
 							(pull) =>
 								`<!-- Pull request -->
 Author:
-@${pull.user.login}
+${pull.user.login}
 
 Link:
 ${pull.html_url}
@@ -207,10 +207,12 @@ const recap = async (announcements, pulls) => {
 		messages: [
 			{
 				role: "user",
-				content: `Write a news article for the Nix community using the following update information. The article is a weekly recap of the announcements and activity in the Nix community and MUST be titled "Nix Weekly Recap". All pull request and announcement titles must be links. Do NOT output HTML. ONLY output Markdown text. The article should order announcements and pull request information in the best way for the Nix community. Do NOT create a list. Order information in the article based on importance. Major changes, important bug fixes, and community events have higher priority. Remove any mentions of the user "r-ryantm", this is a bot account meant for automation and not a real user. The article MUST be two large paragraphs. Do NOT refer to any authors using pronouns, only use their username. Do NOT write a conclusion, your only goal is to inform.
+				content: `Write a news article for the Nix community using the following update information. The article is a weekly recap of the announcements and activity in the Nix community. All pull request and announcement titles must be links. Do NOT output HTML. ONLY output Markdown text. The article should order announcements and pull request information in the best way for the Nix community. Order information in the article based on importance. Major changes, important bug fixes, and community events have higher priority. Remove any mentions of the user "r-ryantm". Do NOT refer to any authors using pronouns, only use their username. Do NOT write a conclusion, your only goal is to inform. Do not repeat yourself. Use correct punctuation. Maintain any existing links to announcements and pull requests. Only write paragraphs. Do NOT output any titles. Do NOT output any lists. Do NOT output any HTML. Do NOT output any Markdown titles.
 
+Announcements Recap:
 ${announcementRecap.split("\n\n").join(" ").split("\n").join(" ")}
 
+Pull Requests Recap:
 ${pullRecap.split("\n\n").join(" ").split("\n").join(" ")}
 `,
 			},
@@ -244,7 +246,7 @@ const getDiscourseAnnouncements = async () => {
 };
 
 const getDiscourseAnnouncementPost = async (announcement) => {
-	log.info(`Fetching post for announcement ${announcement.title}`);
+	log.info(`Fetching post for announcement ${announcement.title.trim()}`);
 	const response = await fetch(`${DISCOURSE_URL}/t/${announcement.id}.json`);
 	if (!response.ok) {
 		throw new Error(`Failed to fetch announcement. Status: ${response.status}`);
@@ -281,11 +283,15 @@ const getGitHubClosedPullRequests = async () => {
 				continue;
 			}
 
-			if (await isPullUseful(pull)) {
-				console.log(pull.title, true);
+			const isUseful = await isPullUseful(pull);
+
+			log.info("Checking pull request usefulness", {
+				title: pull.title.trim(),
+				isUseful,
+			});
+
+			if (isUseful) {
 				results.push(pull);
-			} else {
-				console.log(pull.title, false);
 			}
 
 			await sleep(1_000);
@@ -308,19 +314,23 @@ const getGitHubClosedPullRequests = async () => {
 	);
 
 	return Promise.all(
-		merged.map(async (pull) => ({
-			...pull,
-			// Pull requests to NixPkgs contain a section with a checklist for handling
-			// review. This section isn't useful for our purposes so we remove it along
-			// with any html comments contained in the body.
-			body: await summarize({
-				title: pull.title.trim(),
-				body: pull.body
-					.split(PULL_REQUEST_DELIMITER)[0]
-					.replace(/<\!--.*?-->/g, "")
-					.trim(),
-			}),
-		})),
+		merged.map(async (pull) => {
+			log.info("Summarizing pull request", { title: pull.title.trim() });
+
+			return {
+				...pull,
+				// Pull requests to NixPkgs contain a section with a checklist for handling
+				// review. This section isn't useful for our purposes so we remove it along
+				// with any html comments contained in the body.
+				body: await summarize({
+					title: pull.title.trim(),
+					body: pull.body
+						.split(PULL_REQUEST_DELIMITER)[0]
+						.replace(/<\!--.*?-->/g, "")
+						.trim(),
+				}),
+			};
+		}),
 	);
 };
 
@@ -350,15 +360,13 @@ ${pull.body}
 	return response.choices[0].message.content.trim().toLowerCase() === "yes";
 };
 
-const pulls = await getGitHubClosedPullRequests();
-
 const announcements = await getDiscourseAnnouncements();
-
-log.info({ pulls: pulls.length, announcements: announcements.length });
 
 const announcementsWithPosts = await Promise.all(
 	announcements.map(async (announcement) => {
 		const post = await getDiscourseAnnouncementPost(announcement);
+
+		log.info("Summarizing post", { title: announcement.title.trim() });
 
 		return {
 			...announcement,
@@ -370,6 +378,10 @@ const announcementsWithPosts = await Promise.all(
 		};
 	}),
 );
+
+const pulls = await getGitHubClosedPullRequests();
+
+log.info({ pulls: pulls.length, announcements: announcements.length });
 
 log.info("Creating article");
 const article = await recap(announcementsWithPosts, pulls);
@@ -388,7 +400,10 @@ pubDate: "${date}"
 description: Weekly recap of the announcements and activity in the Nix community and on the NixPkgs package repository.
 ---
 
-${article.replace("# Nix Weekly Recap", "").replaceAll("’", "`").trim()}`;
+${article
+		.replace(/^(?:# )?Nix Weekly Recap/, "")
+		.replaceAll("’", "`")
+		.trim()}`;
 
 await fs.writeFile(
 	path.resolve(BLOG_CONTENT_DIRECTORY, `${date}.md`),
