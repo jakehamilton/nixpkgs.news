@@ -303,7 +303,7 @@ const getGitHubClosedPullRequests = async () => {
 		const last = response.data[response.data.length - 1];
 
 		if (
-			results.length > 20 ||
+			results.length > 30 ||
 			!last ||
 			!last.merged_at ||
 			Date.parse(last.merged_at) < WEEK_START
