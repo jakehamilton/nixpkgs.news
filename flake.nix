@@ -21,7 +21,7 @@
 
       snowfall = {
         root = ./nix;
-        namespace = "snowfallorg";
+        namespace = "plusultra";
       };
     };
 }
