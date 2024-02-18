@@ -71,7 +71,7 @@ system configuration.
 
         virtualHosts."example.com" = {
             locations."/" = {
-                root = "${inputs.nixpkgs-news.packages.nixpkgs-news}/libexec/nixpkgs-news";
+                root = inputs.nixpkgs-news.packages.nixpkgs-news;
             };
         };
     };

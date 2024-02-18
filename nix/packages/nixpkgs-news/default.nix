@@ -17,8 +17,8 @@ in
     npmFlags = [ "--ignore-scripts" ];
 
     installPhase = ''
-      mkdir -p $out/libexec/nixpkgs-news
+      mkdir -p $out
 
-      cp -r ./dist/* $out/libexec/nixpkgs-news/
+      cp -r ./dist/* $out/
     '';
   }
