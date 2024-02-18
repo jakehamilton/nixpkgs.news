@@ -1,5 +1,5 @@
 {
-  description = "My Nix flake";
+  description = "nixpkgs.news";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";

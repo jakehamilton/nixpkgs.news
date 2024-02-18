@@ -1,68 +1,79 @@
-# Astro Starter Kit: Blog
+# nixpkgs.news
 
-```sh
-npm create astro@latest -- --template blog
+<a href="https://nixos.wiki/wiki/Flakes" target="_blank">
+	<img alt="Nix Flakes Ready" src="https://img.shields.io/static/v1?logo=nixos&logoColor=d8dee9&label=Nix%20Flakes&labelColor=5e81ac&message=Ready&color=d8dee9&style=for-the-badge">
+</a>
+<a href="https://github.com/snowfallorg/lib" target="_blank">
+	<img alt="Built With Snowfall" src="https://img.shields.io/static/v1?logoColor=d8dee9&label=Built%20With&labelColor=5e81ac&message=Snowfall&color=d8dee9&style=for-the-badge">
+</a>
+
+<p>
+<!--
+	This paragraph is not empty, it contains an em space (UTF-8 8195) on the next line in order
+	to create a gap in the page.
+-->
+  
+</p>
+
+> An experiment to make Nix ecosystem news more accessible.
+
+## Development
+
+If you are using [`direnv`](https://direnv.net), run `direnv allow` after cloning
+this repository to automatically enable the development shell. If you are not
+using `direnv`, then you must manually run `nix develop` in after cloning this
+repository in order to activate the development shell.
+
+The development shell provides the following packages:
+
+- NodeJS
+- Bun
+
+Node is used for normal development tasks, but Bun is used to execute `tools/*` scripts
+due to Node choking on some useful features. Ideally we would switch over to Bun fully,
+but there isn't currently a Nix builder for projects using `bun.lockb` files.
+
+To start developing, run `npm install` to get dependencies and then `npm run dev` to start
+the development server.
+
+## Usage
+
+This project is intended to be consumed by a NixOS system. First, add this repository
+as an input to your flake.
+
+```nix
+{
+    description = "My Nix flake";
+
+    inputs = {
+        nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+
+        nixpkgs-news = {
+            url = "github:jakehamilton/nixpkgs.news";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+    };
+}
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+Then you can serve the website's files statically using a server like nginx in your
+system configuration.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+```nix
+{
+    inputs, # Make the nixpkgs-news input available in your configuration.
+    ...
+}:
+{
+    services.nginx = {
+        enable = true;
+        recommendedProxySettings = true;
 
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+        virtualHosts."example.com" = {
+            locations."/" = {
+                root = "${inputs.nixpkgs-news.packages.nixpkgs-news}/libexec/nixpkgs-news";
+            };
+        };
+    };
+}
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
