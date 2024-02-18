@@ -17,6 +17,8 @@
 
       src = ./.;
 
+      alias.packages.default = "nixpkgs-news";
+
       snowfall = {
         root = ./nix;
         namespace = "snowfallorg";
