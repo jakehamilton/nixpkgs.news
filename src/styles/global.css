@@ -159,6 +159,17 @@ article p:first-of-type:first-letter {
   margin-right: 0.25rem;
 }
 
+@media screen and (max-width: 490px) {
+  article p:first-of-type:first-letter {
+    margin-top: 0;
+    margin-right: 0.375rem;
+  }
+
+  .title h1 {
+    font-size: 2rem;
+  }
+}
+
 code {
   font-family: "Playfair Display", serif;
   background: rgba(var(--gray-dark), 10%);

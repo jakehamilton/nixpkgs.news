@@ -19,6 +19,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				max-width: 100%;
 				margin: 0;
 			}
+
+			article {
+				padding-top: 2rem;
+			}
+
 			.hero-image {
 				width: 100%;
 			}
@@ -29,10 +34,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				box-shadow: var(--box-shadow);
 			}
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
+				width: 100%;
+				max-width: 75ch;
+				margin: 0 auto;
+				padding: 1em 0;
 				color: rgb(var(--gray-dark));
 			}
 			.title {
@@ -58,13 +63,6 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<Header />
 		<main>
 			<article>
-				<div class="hero-image">
-					{
-						heroImage && (
-							<img width={1020} height={510} src={heroImage} alt="" />
-						)
-					}
-				</div>
 				<div class="prose">
 					<div class="title">
 						<h1>
