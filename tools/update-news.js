@@ -405,6 +405,7 @@ description: Weekly recap of the announcements and activity in the Nix community
 
 ${article
 		.replace(/^(?:# )?Nix Weekly Recap/, "")
+		.replaceAll("’s", "'s")
 		.replaceAll("’", "`")
 		.trim()}`;
 
