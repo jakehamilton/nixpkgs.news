@@ -177,3 +177,7 @@ code {
   border-radius: 0.25rem;
   font-size: 0.9em;
 }
+
+ul {
+  padding-left: 1.15rem;
+}

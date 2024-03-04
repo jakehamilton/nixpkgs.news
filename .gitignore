@@ -23,3 +23,6 @@ pnpm-debug.log*
 # Nix
 result
 .direnv
+
+# Generated files
+updates.md
