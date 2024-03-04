@@ -35,7 +35,6 @@ const posts = (await getCollection("blog"))
 			}
 			ul li * {
 				text-decoration: none;
-				transition: 175ms ease;
 			}
 			ul li:first-child {
 				width: 100%;
@@ -56,9 +55,12 @@ const posts = (await getCollection("blog"))
 			ul li a {
 				display: block;
 			}
+			ul li a h4 {
+				transition: color 175ms ease;
+			}
 			.title {
 				margin: 0;
-				color: rgb(var(--black));
+				color: var(--foreground);
 				line-height: 1;
 			}
 			.date {

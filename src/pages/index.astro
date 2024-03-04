@@ -47,7 +47,7 @@ const { title, description, pubDate, updatedDate, heroImage } = post.data;
 				max-width: 75ch;
 				margin: 0 auto;
 				padding: 1em 0;
-				color: rgb(var(--gray-dark));
+				color: var(--foreground);
 			}
 			.title {
 				margin-bottom: 1em;
@@ -60,7 +60,8 @@ const { title, description, pubDate, updatedDate, heroImage } = post.data;
 			}
 			.date {
 				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+				color: var(--foreground);
+				opacity: 0.65;
 			}
 			.last-updated-on {
 				font-style: italic;

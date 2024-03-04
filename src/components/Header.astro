@@ -8,7 +8,9 @@ import { SITE_TITLE } from "../consts";
 	<nav>
 		<h2>{Astro.url.pathname === "/" ? "" : <a href="/">{SITE_TITLE}</a>}</h2>
 		<div class="internal-links">
-			<HeaderLink href="/archive" alt="archive"><Icon.Archive size={20} fill="currentColor" /></HeaderLink>
+			<HeaderLink href="/archive" alt="archive">
+				<Icon.Archive size={20} fill="currentColor" />
+			</HeaderLink>
 		</div>
 	</nav>
 </header>
@@ -39,9 +41,12 @@ import { SITE_TITLE } from "../consts";
 	}
 	nav a {
 		padding: 1em 0.5em;
-		color: var(--black);
+		color: var(--foreground);
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
+	}
+	nav a:hover {
+		color: var(--accent);
 	}
 	.social-links,
 	.social-links a {

@@ -5,18 +5,22 @@
  */
 
 :root {
-  --accent: #6f8af7;
-  --accent-dark: #4e67ce;
-  --black: 15, 18, 25;
-  --gray: 96, 115, 159;
-  --gray-light: 229, 233, 240;
-  --gray-dark: 34, 41, 57;
+  --black: 46, 52, 64;
+  --gray: 229, 233, 240;
+  --gray-light: 236, 239, 244;
+  --gray-dark: 216, 222, 233;
   --gray-gradient: rgba(var(--gray-light), 50%), #fff;
+  --blue-light: 129, 161, 193;
+  --blue: 94, 129, 172;
+
   --box-shadow: 0 2px 6px rgba(var(--gray), 25%),
     0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%);
 
-  --foreground: #000;
+  --foreground: rgba(var(--black), 100%);
   --background: rgba(var(--gray-light), 100%);
+
+  --accent: rgba(var(--blue), 100%);
+  --accent-dark: #4e67ce;
 }
 
 *,
@@ -53,7 +57,7 @@ h4,
 h5,
 h6 {
   margin: 0 0 0.5rem 0;
-  color: rgb(var(--black));
+  color: var(--foreground);
   line-height: 1.2;
 }
 h1 {
