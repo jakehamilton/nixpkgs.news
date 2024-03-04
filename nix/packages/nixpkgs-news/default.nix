@@ -12,9 +12,9 @@ in
 
     src = lib.snowfall.fs.get-file "/";
 
-    npmDepsHash = "sha256-da0Wq9AIE1SSCYwdLGQua7MhFktsZ1DXLI7uEEUZ09E=";
+    npmDepsHash = "sha256-pTSVr2yxP7PgwKU7rEvgpmMgMmB101RC+Ay1PYBsrP4=";
 
-    npmFlags = [ "--ignore-scripts" ];
+    npmFlags = ["--ignore-scripts"];
 
     installPhase = ''
       mkdir -p $out

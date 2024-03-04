@@ -73,3 +73,11 @@ const { title, description, image = null } = Astro.props;
 	href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap"
 	rel="stylesheet"
 />
+
+<!-- RSS -->
+<link
+	rel="alternate"
+	type="application/rss+xml"
+	title="nixpkgs.news"
+	href={`${Astro.site}rss.xml`}
+/>

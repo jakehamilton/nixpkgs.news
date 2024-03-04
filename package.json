@@ -13,11 +13,13 @@
 	"dependencies": {
 		"@astrojs/check": "^0.4.1",
 		"@astrojs/mdx": "^2.1.1",
-		"@astrojs/rss": "^4.0.4",
+		"@astrojs/rss": "^4.0.5",
 		"@astrojs/sitemap": "^3.0.5",
 		"@astropub/icons": "0.2.0",
 		"astro": "^4.3.2",
 		"dotenv": "16.4.1",
+		"markdown-it": "^14.0.0",
+		"sanitize-html": "^2.12.1",
 		"typescript": "^5.3.3"
 	},
 	"devDependencies": {
