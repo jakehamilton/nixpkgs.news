@@ -183,7 +183,7 @@ article p:first-of-type:first-letter {
 
 code {
   font-family: "Playfair Display", serif;
-  background: rgba(var(--gray-dark), 10%);
+  background: rgba(var(--gray-dark), 100%);
   padding: 0.075em 0.375em;
   border-radius: 0.25rem;
   font-size: 0.9em;
