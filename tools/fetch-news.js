@@ -122,7 +122,7 @@ const getGitHubClosedPullRequests = async () => {
 		if (
 			// results.length > 200 ||
 			!last ||
-			!last.merged_at ||
+			// !last.merged_at ||
 			Date.parse(last.merged_at) < WEEK_START
 		) {
 			break;
@@ -222,7 +222,11 @@ ${pulls
 			&lt;${pull.user.login}&gt; ${pull.title.trim()}
 	</summary>
 
-[${pull.html_url}](${pull.html_url})
+[${pull.user.login}](https://github.com/${pull.user.login}): [Pull Request](${pull.html_url
+				})
+
+\[${pull.user.login}\](https://github.com/${pull.user.login
+				}): \[Pull Request\](${pull.html_url})
 
 ${pull.body}
 
