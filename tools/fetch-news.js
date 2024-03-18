@@ -109,13 +109,13 @@ const getGitHubClosedPullRequests = async () => {
 			state: "closed",
 			sort: "updated",
 			direction: "desc",
-			per_page: 50,
+			per_page: 60,
 			page: page++,
 		});
 
 		results = results.concat(response.data);
 
-		// await sleep(1_000);
+		await sleep(500);
 
 		const last = response.data[response.data.length - 1];
 
