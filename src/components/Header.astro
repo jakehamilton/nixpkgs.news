@@ -8,8 +8,14 @@ import { SITE_TITLE } from "../consts";
 	<nav>
 		<h2>{Astro.url.pathname === "/" ? "" : <a href="/">{SITE_TITLE}</a>}</h2>
 		<div class="internal-links">
+			<HeaderLink href="/about" alt="about">
+				<Icon.Person size={20} fill="currentColor" alt="about" />
+			</HeaderLink>
+			<HeaderLink href="/rss.xml" alt="rss">
+				<Icon.Globe size={20} fill="currentColor" alt="rss" />
+			</HeaderLink>
 			<HeaderLink href="/archive" alt="archive">
-				<Icon.Archive size={20} fill="currentColor" />
+				<Icon.Archive size={20} fill="currentColor" alt="archive" />
 			</HeaderLink>
 		</div>
 	</nav>
@@ -38,6 +44,7 @@ import { SITE_TITLE } from "../consts";
 		display: flex;
 		flex-grow: 1;
 		justify-content: flex-end;
+		gap: 1rem;
 	}
 	nav a {
 		padding: 1em 0.5em;
