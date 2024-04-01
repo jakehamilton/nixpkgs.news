@@ -121,7 +121,7 @@ const getGitHubClosedPullRequests = async () => {
 
 		if (
 			// results.length > 200 ||
-			!last ||
+			// !last ||
 			// !last.merged_at ||
 			Date.parse(last.merged_at) < WEEK_START
 		) {
@@ -135,7 +135,7 @@ const getGitHubClosedPullRequests = async () => {
 
 	return Promise.all(
 		merged.map(async (pull) => {
-			log.info("Summarizing pull request", { title: pull.title.trim() });
+			log.info("Normalizing pull request", { title: pull.title.trim() });
 
 			return {
 				...pull,
@@ -158,7 +158,7 @@ const announcementsWithPosts = await Promise.all(
 	announcements.map(async (announcement) => {
 		const post = await getDiscourseAnnouncementPost(announcement);
 
-		log.info("Summarizing post", { title: announcement.title.trim() });
+		log.info("Normalizing post", { title: announcement.title.trim() });
 
 		return {
 			...announcement,
@@ -186,6 +186,10 @@ pulls = pulls.sort((a, b) => {
 		return -1;
 	}
 
+	if (a.title.match(/\binit\b/)) {
+		return 1;
+	}
+
 	return 0;
 });
 
@@ -202,7 +206,12 @@ ${announcementsWithPosts
 		&lt;${announcement.post.username}&gt; ${announcement.title.trim()}
 	</summary>
 
-[${announcement.link}](${announcement.link})
+\`\`\`
+[${announcement.post.username}](https://discourse.nixos.org/u/${announcement.post.username
+				})
+
+[${announcement.title}](${announcement.link})
+\`\`\`
 
 ${announcement.post.body}
 </details>
@@ -225,8 +234,10 @@ ${pulls
 [${pull.user.login}](https://github.com/${pull.user.login}): [Pull Request](${pull.html_url
 				})
 
-\[${pull.user.login}\](https://github.com/${pull.user.login
-				}): \[Pull Request\](${pull.html_url})
+\`\`\`
+[${pull.user.login}](https://github.com/${pull.user.login
+				}): added \`pkg\`: [Pull Request](${pull.html_url})
+\`\`\`
 
 ${pull.body}
 
