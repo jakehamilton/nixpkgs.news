@@ -103,19 +103,25 @@ const getGitHubClosedPullRequests = async () => {
 	let page = 1;
 	while (true) {
 		log.info("Fetching pull requests", { results: results.length, page });
-		const response = await octokit.rest.pulls.list({
-			owner: GITHUB_ORG,
-			repo: GITHUB_REPO,
-			state: "closed",
-			sort: "updated",
-			direction: "desc",
-			per_page: 60,
-			page: page++,
-		});
+		let response;
+		try {
+			response = await octokit.rest.pulls.list({
+				owner: GITHUB_ORG,
+				repo: GITHUB_REPO,
+				state: "closed",
+				sort: "updated",
+				direction: "desc",
+				per_page: 60,
+				page: page++,
+			});
+		} catch (error) {
+			console.error(error);
+			throw error;
+		}
 
 		results = results.concat(response.data);
 
-		await sleep(500);
+		await sleep(1_000);
 
 		const last = response.data[response.data.length - 1];
 
@@ -207,7 +213,7 @@ ${announcementsWithPosts
 	</summary>
 
 \`\`\`
-[${announcement.post.username}](https://discourse.nixos.org/u/${announcement.post.username
+[@${announcement.post.username}](https://discourse.nixos.org/u/${announcement.post.username
 				})
 
 [${announcement.title}](${announcement.link})
@@ -231,11 +237,11 @@ ${pulls
 			&lt;${pull.user.login}&gt; ${pull.title.trim()}
 	</summary>
 
-[${pull.user.login}](https://github.com/${pull.user.login}): [Pull Request](${pull.html_url
+[@${pull.user.login}](https://github.com/${pull.user.login}): [Pull Request](${pull.html_url
 				})
 
 \`\`\`
-[${pull.user.login}](https://github.com/${pull.user.login
+[@${pull.user.login}](https://github.com/${pull.user.login
 				}): added \`pkg\`: [Pull Request](${pull.html_url})
 \`\`\`
 
