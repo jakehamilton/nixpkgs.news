@@ -8,14 +8,14 @@ import { SITE_TITLE } from "../consts";
 	<nav>
 		<h2>{Astro.url.pathname === "/" ? "" : <a href="/">{SITE_TITLE}</a>}</h2>
 		<div class="internal-links">
-			<HeaderLink href="/about" alt="about">
-				<Icon.Person size={20} fill="currentColor" alt="about" />
+			<HeaderLink href="/about" title="about">
+				<Icon.Person size={20} fill="currentColor" title="about" />
 			</HeaderLink>
 			<HeaderLink href="/rss.xml" alt="rss">
-				<Icon.Globe size={20} fill="currentColor" alt="rss" />
+				<Icon.Globe size={20} fill="currentColor" title="rss" />
 			</HeaderLink>
 			<HeaderLink href="/archive" alt="archive">
-				<Icon.Archive size={20} fill="currentColor" alt="archive" />
+				<Icon.Archive size={20} fill="currentColor" title="archive" />
 			</HeaderLink>
 		</div>
 	</nav>
