@@ -9,13 +9,13 @@ import { SITE_TITLE } from "../consts";
 		<h2>{Astro.url.pathname === "/" ? "" : <a href="/">{SITE_TITLE}</a>}</h2>
 		<div class="internal-links">
 			<HeaderLink href="/about" alt="about">
-				<Icon.Person size={20} fill="currentColor" alt="about" />
+				<Icon.Person size={20} fill="currentColor" title="About" />
 			</HeaderLink>
 			<HeaderLink href="/rss.xml" alt="rss">
-				<Icon.Globe size={20} fill="currentColor" alt="rss" />
+				<Icon.Globe size={20} fill="currentColor" title="RSS" />
 			</HeaderLink>
 			<HeaderLink href="/archive" alt="archive">
-				<Icon.Archive size={20} fill="currentColor" alt="archive" />
+				<Icon.Archive size={20} fill="currentColor" title="Archive" />
 			</HeaderLink>
 		</div>
 	</nav>
@@ -23,7 +23,7 @@ import { SITE_TITLE } from "../consts";
 <style>
 	header {
 		margin: 0;
-		padding: 0 1rem;
+		padding: 0.5rem 1rem;
 		position: absolute;
 		width: 100%;
 	}
@@ -44,7 +44,8 @@ import { SITE_TITLE } from "../consts";
 		display: flex;
 		flex-grow: 1;
 		justify-content: flex-end;
-		gap: 1rem;
+		align-items: center;
+		gap: 0.5rem;
 	}
 	nav a {
 		padding: 1em 0.5em;
@@ -55,6 +56,22 @@ import { SITE_TITLE } from "../consts";
 	nav a:hover {
 		color: var(--accent);
 	}
+
+	nav .internal-links a {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 48px;
+		height: 48px;
+		border-radius: 0.75rem;
+		transition: background 100ms, color 100ms;
+	}
+
+	nav .internal-links a:hover {
+		color: var(--background);
+		background: var(--foreground);
+	}
+
 	.social-links,
 	.social-links a {
 		display: flex;

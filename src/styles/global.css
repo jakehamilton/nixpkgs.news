@@ -5,6 +5,7 @@
  */
 
 :root {
+  --off-white: 254, 254, 254;
   --black: 46, 52, 64;
   --gray: 229, 233, 240;
   --gray-light: 236, 239, 244;
@@ -17,7 +18,7 @@
     0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%);
 
   --foreground: rgba(var(--black), 100%);
-  --background: rgba(var(--gray-light), 100%);
+  --background: rgba(var(--off-white), 100%);
 
   --accent: rgba(var(--blue), 100%);
   --accent-dark: #4e67ce;
@@ -108,7 +109,7 @@ img {
 }
 code {
   padding: 2px 5px;
-  background-color: rgb(var(--gray-light));
+  /* background-color: rgb(var(--gray-light)); */
   border-radius: 2px;
 }
 pre {
@@ -117,6 +118,7 @@ pre {
 }
 pre > code {
   all: unset;
+  background-color: rgb(var(--gray-light));
 }
 blockquote {
   position: relative;
@@ -204,11 +206,12 @@ article > p:first-of-type:first-letter {
 }
 
 code {
-  font-family: "Playfair Display", serif;
-  background: rgba(var(--gray-dark), 100%);
+  font-family: "monospace", serif;
   padding: 0.075em 0.375em;
   border-radius: 0.25rem;
   font-size: 0.9em;
+  font-weight: 400;
+  background-color: rgba(var(--gray), 60%);
 }
 
 ul {
