@@ -24,6 +24,15 @@
   --accent-dark: #4e67ce;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #101114;
+    --foreground: rgba(var(--off-white), 100%);
+    --accent: rgba(var(--blue-light), 100%);
+    --gray: var(--black);
+  }
+}
+
 *,
 *::before,
 *::after {
