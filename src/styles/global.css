@@ -24,6 +24,16 @@
   --accent-dark: #4e67ce;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --black: 236, 239, 244;
+    --off-white: 46, 52, 64;
+    --gray: 67, 76, 94;
+    --gray-light: 76, 86, 106;
+    --gray-dark: 59, 66, 82;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -151,6 +161,7 @@ blockquote::before {
 hr {
   border: none;
   border-top: 1px solid rgb(var(--gray-light));
+  margin-bottom: 2rem;
 }
 @media (max-width: 720px) {
   body {
